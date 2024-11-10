@@ -1,0 +1,27 @@
+### Get All Products
+GET http://localhost:5000/api/reviews
+
+### Get Single Product
+GET http://localhost:5000/api/reviews/1
+
+### Create New Product
+POST http://localhost:5000/api/reviews
+Content-Type: application/json
+
+{
+    "title": "product title",
+     "price": 299
+}
+
+
+###Update reviews
+PUT  http://localhost:5000/api/reviews/3
+Content-Type: application/json
+
+{
+    "title": "product title updated"
+}
+
+
+###Update reviews
+DELETE  http://localhost:5000/api/reviews/3
