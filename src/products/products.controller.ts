@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  ValidationPipe,
   // Req,
   // Res,
 } from '@nestjs/common';
@@ -38,7 +39,9 @@ export class ProductsController {
   // }
 
   @Post()
-  public createNewProduct(@Body() body: createNewProductDto) {
+  public createNewProduct(
+    @Body(new ValidationPipe()) body: createNewProductDto,
+  ) {
     const newProduct: ProductType = {
       id: this.products.length + 1,
       title: body.title,
@@ -66,7 +69,7 @@ export class ProductsController {
   @Put('/:id')
   public updateProduct(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateProductDto,
+    @Body(new ValidationPipe()) body: UpdateProductDto,
   ) {
     const product = this.products.find((product) => product.id === Number(id));
     if (!product)
