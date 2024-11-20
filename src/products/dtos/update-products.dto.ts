@@ -4,7 +4,7 @@ import {
   IsOptional,
   IsString,
   Length,
-  Min,
+  Min, MinLength,
 } from 'class-validator';
 
 export class UpdateProductDto {
@@ -15,6 +15,11 @@ export class UpdateProductDto {
   @IsOptional()
   @Length(2, 150)
   title?: string;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(5)
+  description?: string;
 
   @IsNumber()
   @IsNotEmpty()
