@@ -1,18 +1,25 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   HttpCode,
-  HttpStatus,
+  HttpStatus, Param, ParseIntPipe,
   Post,
-  Headers, UseGuards, Req,
+  Put,
+  UseGuards, UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import RegisterDto from './dtos/rejister.dto';
-import { AuthGuard } from './auth.guard';
-import { CURRENT_USER_KEY } from '../utils/constants';
-import { CurrentUser } from '../decorators/current-user.decorator';
+import { AuthGuard } from './guards/auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { JWTPayloadType } from '../utils/types';
+import { UserEntity } from './user.entity';
+import { TypeUser } from '../utils/enums';
+import { Roles } from './decorators/user-role.decorator';
+import { AuthRolesGuard } from './guards/auth-roles.guard';
+import UpdateUserDto from './dtos/update-user.dto';
+import LoggerIntereptor from '../utils/interseptors/logger.intereptor';
+
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UserService) {}
@@ -37,8 +44,38 @@ export class UsersController {
   // GET ~api/users/auth/current-user
   @UseGuards(AuthGuard)
   @Get('auth/current-user')
+  @UseInterceptors(LoggerIntereptor)
   public async getCurrentUser(@CurrentUser() payload: JWTPayloadType) {
     return this.userService.getCurrentUser(payload.id);
     // return this.userService.getCurrentUser();
+  }
+
+  // GET ~api/users
+  @Get()
+  @Roles(TypeUser.ADMIN)
+  @UseGuards(AuthRolesGuard)
+  public getAllUsers(): Promise<UserEntity[]> {
+    return this.userService.getAll();
+  }
+
+  //@Put ~api/users/:id
+  @Put()
+  @Roles(TypeUser.ADMIN, TypeUser.NORMAL_USER)
+  @UseGuards(AuthRolesGuard)
+  public updateUser(
+    @CurrentUser() payload: JWTPayloadType,
+    @Body() body: UpdateUserDto,
+  ) {
+    return this.userService.updateUser(payload.id, body);
+  }
+
+  @Delete('/:id')
+  @Roles(TypeUser.ADMIN, TypeUser.NORMAL_USER)
+  @UseGuards(AuthRolesGuard)
+  public deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() payload: JWTPayloadType,
+  ) {
+    return this.userService.delete(id, payload);
   }
 }

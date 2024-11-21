@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { CURRENT_USER_KEY } from '../utils/constants';
+import { CURRENT_USER_KEY } from '../../utils/constants';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
