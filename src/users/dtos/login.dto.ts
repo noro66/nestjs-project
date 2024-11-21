@@ -1,12 +1,11 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
-  IsString, Length,
+  IsString,
   MaxLength,
 } from 'class-validator';
 
-export default class RegisterDto {
+export default class LoginDto {
   @IsEmail()
   @MaxLength(250)
   @IsNotEmpty()
@@ -17,8 +16,4 @@ export default class RegisterDto {
   @IsNotEmpty()
   password: string;
 
-  @IsOptional()
-  @Length(2, 150)
-  @IsNotEmpty()
-  username: string;
 }

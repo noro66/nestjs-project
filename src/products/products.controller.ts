@@ -17,7 +17,7 @@ import { UpdateProductDto } from './dtos/update-products.dto';
 import { ProductService } from './products.service';
 // import { Request, Response } from 'express';
 
-@Controller('/api/products')
+@Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
 
