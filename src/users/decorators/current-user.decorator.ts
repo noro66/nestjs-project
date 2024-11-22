@@ -4,9 +4,8 @@ import { CURRENT_USER_KEY } from '../../utils/constants';
 
 //Current User Parameter Decorator
 export const CurrentUser = createParamDecorator(
-  (data, context: ExecutionContext) => {
+  (data, context: ExecutionContext): JWTPayloadType => {
     const request = context.switchToHttp().getRequest();
-    const payload: JWTPayloadType = request[CURRENT_USER_KEY];
-    return payload;
+    return request[CURRENT_USER_KEY];
   },
 );

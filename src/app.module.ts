@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ChatGateway } from './chat/chat.gateway';
 import { UserEntity } from './users/user.entity';
 import { ReviewEntity } from './reviews/review.entity';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 @Module({
   imports: [
     ProductsModule,
@@ -34,6 +35,9 @@ import { ReviewEntity } from './reviews/review.entity';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
   ],
-  providers: [ChatGateway],
+  providers: [
+    ChatGateway,
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+  ],
 })
 export class AppModule {}

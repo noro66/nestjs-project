@@ -1,12 +1,15 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   HttpCode,
-  HttpStatus, Param, ParseIntPipe,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
-  UseGuards, UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import RegisterDto from './dtos/rejister.dto';
@@ -18,7 +21,6 @@ import { TypeUser } from '../utils/enums';
 import { Roles } from './decorators/user-role.decorator';
 import { AuthRolesGuard } from './guards/auth-roles.guard';
 import UpdateUserDto from './dtos/update-user.dto';
-import LoggerIntereptor from '../utils/interseptors/logger.intereptor';
 
 @Controller('users')
 export class UsersController {
@@ -44,7 +46,6 @@ export class UsersController {
   // GET ~api/users/auth/current-user
   @UseGuards(AuthGuard)
   @Get('auth/current-user')
-  @UseInterceptors(LoggerIntereptor)
   public async getCurrentUser(@CurrentUser() payload: JWTPayloadType) {
     return this.userService.getCurrentUser(payload.id);
     // return this.userService.getCurrentUser();
@@ -52,8 +53,8 @@ export class UsersController {
 
   // GET ~api/users
   @Get()
-  @Roles(TypeUser.ADMIN)
-  @UseGuards(AuthRolesGuard)
+  // @Roles(TypeUser.ADMIN, TypeUser.NORMAL_USER)
+  // @UseGuards(AuthRolesGuard)
   public getAllUsers(): Promise<UserEntity[]> {
     return this.userService.getAll();
   }

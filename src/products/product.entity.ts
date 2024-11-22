@@ -25,10 +25,10 @@ export class ProductEntity {
   @Column({ type: 'float' })
   price: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.products)
+  @ManyToOne(() => UserEntity, (user) => user.products, { eager: true })
   user: UserEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.product)
+  @OneToMany(() => ReviewEntity, (review) => review.product, { eager: true })
   reviews: ReviewEntity[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })

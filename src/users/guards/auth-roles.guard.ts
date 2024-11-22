@@ -21,17 +21,23 @@ export class AuthRolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if(!roles && roles.length === 0) return false;
+    if (!roles && roles.length === 0) return false;
     const request: Request = context.switchToHttp().getRequest();
-    const [type, token] = request.headers.authorization?.split(' ');
+    const authHeader = request.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header is missing');
+    }
+    const [type, token] = authHeader.split(' ');
     if (token && type === 'Bearer') {
       try {
         const payload = await this.jwtService.verifyAsync(token, {
           secret: this.config.get<string>('JWT_SECRET'),
         });
-        const user: UserEntity = await this.userService.getCurrentUser(payload.id);
+        const user: UserEntity = await this.userService.getCurrentUser(
+          payload.id,
+        );
         if (!user) return false;
-        if (roles.includes(user.userType)){
+        if (roles.includes(user.userType)) {
           request[CURRENT_USER_KEY] = payload;
           return true;
         }

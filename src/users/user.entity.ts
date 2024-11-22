@@ -10,6 +10,7 @@ import { CURRENT_TIMESTAMP } from '../utils/constants';
 import { ProductEntity } from '../products/product.entity';
 import { ReviewEntity } from '../reviews/review.entity';
 import { TypeUser } from '../utils/enums';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -23,6 +24,7 @@ export class UserEntity {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ type: 'enum', enum: TypeUser, default: TypeUser.NORMAL_USER })
@@ -30,6 +32,12 @@ export class UserEntity {
 
   @Column({ default: false })
   isAccountVerified: boolean;
+
+  @OneToMany(() => ProductEntity, (product) => product.user)
+  products: ProductEntity[];
+
+  @OneToMany(() => ReviewEntity, (review) => review.user)
+  reviews: ReviewEntity[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;
@@ -39,10 +47,4 @@ export class UserEntity {
     onUpdate: CURRENT_TIMESTAMP,
   })
   updatedAt: Date;
-
-  @OneToMany(() => ProductEntity, (product) => product.user)
-  products: ProductEntity[];
-
-  @OneToMany(() => ReviewEntity, (review) => review.user)
-  reviews: ReviewEntity[];
 }
